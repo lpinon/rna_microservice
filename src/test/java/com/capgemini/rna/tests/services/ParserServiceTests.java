@@ -16,8 +16,57 @@ public class ParserServiceTests {
 
     @Test
     public void whenReceiveAResultString_returnRNAGenes() {
-        parserService.parseRNAMultilineString(test1String);
+        parserService.parseRNAMultilineString(exampleString);
     }
+
+    private static String exampleString = ">NM_0002\n" +
+            "augugcgag gacugcuga \n" +
+            ">NM_0003 \n" +
+            "augugcgaguag";
+
+    private static String test2String = ">NM_001170833 1\n" +
+            "auggccuuucgcuccagcuugguggaaaaacaagaaacguuuaacuguuu\n" +
+            "cgugaugagugacagagagaaaccaugugacaccaacgcguguccaacaa\n" +
+            "ucgggcugaguaaagcggugucggugucucugggucuggauucgcugucg\n" +
+            "ucuccgcuccacagccagugccccagcagcgcuuuugcagaccccgccga\n" +
+            "cagcggaaaucaugguuuccgaggagugucagaguugggaacgccuggaa\n" +
+            "augugaacucggaaggaaauggacuuguccuagcccgcagcagcccggca\n" +
+            "cgggacaacuuuagagaagugugcgcuaauauucggcaggugagcugcgu\n" +
+            "ggaucuguucagaucggggggaauggacugcgcgcagucuguuacgcgcg\n" +
+            "gaucggucauauccagauucaucugcgaggaucccagcauguucgugaac\n" +
+            "ccggcagcagagcucuccgcgacuucccaggucaaugaggucgcgccuuu\n" +
+            "aaaaccauauucugcuuaucccgcuaauccagaccuguacagggagaacc\n" +
+            "agggcggauggucaucauggugcgcaaacgagcgcauuuacagcgagcga\n" +
+            "cccgagccccacagaggcgggucugacggacaucauuucuccugcaaaua\n" +
+            "ucgcagcugugggccaacuccauucggguccagacaggaaugcaacugug\n" +
+            "ugugguacaguagaggugcgcaaagcgggaaagguggcucacaagcagcg\n" +
+            "auggcacaggguuacggccaaguggaaaguuacccagacgcgacucccca\n" +
+            "agggcaaaacacuuuuuccaccaucaagaccgaaccuucaguuugggugg\n" +
+            "acugcggcgaccgaacuuucaggcaugaggauuuguuuccaggagucuac\n" +
+            "cuguccgaccgcagagugugccagguguguggugacgaugcuucaggcug\n" +
+            "ucacuauggagcagucaccugcggcagcugcaaaguguucuuuaaaaggg\n" +
+            "ccgcugcagguaagcagaaccaccugugugccagccggaacgacugcacc\n" +
+            "aucgacaagcugaggaggaagaacugcgccucgugccguuugaagaggug\n" +
+            "cuucaugucggggaugagccugaaaggccggaggcugaagggagcuggac\n" +
+            "agacgaggaacggagaggaggagcagcagcccacugccugggggccuggg\n" +
+            "gaaagggaagagcgaaagaaagauguuaucccggagccuggaaacauggc\n" +
+            "uuccacggcucaagggccucaaggcuugccaccagggauccccccgacuc\n" +
+            "ugcgcuccugcuuaucccuccugagcauccugcagucuauugaacccacu\n" +
+            "cugguuaaugcgggacaugaccccgcccagccagacagccccucguccuu\n" +
+            "gcuaaccagccucaacgagcucggagagaggcagcugguaaccguggugc\n" +
+            "gcugggccaaggcaauuccagguuuccgugaucuccacguggaugaucag\n" +
+            "augucagugauucagcugucguggaugggggugaugguguuggcguuagg\n" +
+            "guggagauccuacacucucaccaacugcuccaugcucuacuuugcuccag\n" +
+            "aucugguuuuuaacgaccagcggaugcaaaucuccaguauguacgaacac\n" +
+            "ugcgugaggaugaagcuccucgcccaacgcuuccaccggcuggaggugac\n" +
+            "cgaggaggaguuccucugcaugaaggcccucguccucuucagcaucuugc\n" +
+            "caguagagggccugaagagccagcgcuguuuugaugaacugcggaccccc\n" +
+            "uacaucaaggagcuggaucggcuggccagccaccgcggggagaccacccg\n" +
+            "aacacagaggcuguuucagcucacggagcugcuggacuaccuccagucgg\n" +
+            "uugugaggaaacugcaccaguucaccuaugaucucuucauccaagcucag\n" +
+            "ucccugcagacgcgugucaacuuccccgagaugaucucggagauugucag\n" +
+            "uguucaugugcccaaaauccucucaggcauggucaagcccauccuuuucc\n" +
+            "acaacacagccuag";
 
     private static String test1String = ">NM_001170833 1\n" +
             "auggccuuucgcuccagcuugguggaaaaacaagaaacguuuaacuguuu\n" +

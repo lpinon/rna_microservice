@@ -1,5 +1,7 @@
 package com.capgemini.rna.models;
 
+import com.capgemini.rna.models.exceptions.EmptyGenException;
+
 import java.util.ArrayList;
 
 public class Gen {
@@ -10,7 +12,10 @@ public class Gen {
         this.codons.add(codon);
     }
 
-    public Codon getLastCodon() {
+    public Codon getLastCodon() throws EmptyGenException {
+        if (this.codons.size() == 0) {
+            throw new EmptyGenException();
+        }
         return this.codons.get(this.codons.size() - 1);
     }
 
