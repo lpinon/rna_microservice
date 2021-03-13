@@ -27,6 +27,7 @@ public class ParserService {
 
     private ArrayList<Gen> computedGens = new ArrayList<Gen>();
     private Gen currentGen = new Gen();
+    private String missingChars = "";
     private HashSet<Integer> stopCodons;
 
     @PostConstruct
@@ -63,6 +64,8 @@ public class ParserService {
             if (!this.isCurrentGenReady()) {
                 this.currentGen.addCodon(codon);
                 this.handleGenReady();
+            } else {
+                log.info("Gen already complete skipping: " + codon.getIdentificator() );
             }
         } else {
             if(this.isCurrentGenReady()) {
@@ -76,20 +79,25 @@ public class ParserService {
         this.computedGens.add(this.currentGen);
     }
 
-    public void handleNewRNAString(String line) throws AParserHandledException {
-        String cleanLine = this.normalize(line);
-        if(cleanLine.length() >= 3) {
-            for(var i = 0; i < cleanLine.length(); i += 3) {
-                try {
-                    Codon codon = new Codon(cleanLine.charAt(i), cleanLine.charAt(i + 1), cleanLine.charAt(i + 2));
-                    this.handleNewCodon(codon);
-                } catch (IndexOutOfBoundsException ex) {
-                    throw new UnexpectedEndOfStringException();
-                }
+    public void handleNewRNAString(String string) throws AParserHandledException {
+        String cleanLine = this.normalize(string);
+        if(cleanLine.length() > 0) {
+            if(this.missingChars.length() > 0){
+                cleanLine = this.missingChars + cleanLine;
+                this.missingChars = "";
             }
-        }
-        if(cleanLine.length() > 0 && cleanLine.length() < 3){
-            throw new UnexpectedEndOfStringException();
+            try {
+                for(var i = 0; i < cleanLine.length(); i += 3) {
+                    try {
+                        Codon codon = new Codon(cleanLine.charAt(i), cleanLine.charAt(i + 1), cleanLine.charAt(i + 2));
+                        this.handleNewCodon(codon);
+                    } catch (IndexOutOfBoundsException ex) {
+                        throw new UnexpectedEndOfStringException(i);
+                    }
+                }
+            } catch (UnexpectedEndOfStringException e) {
+                this.missingChars = cleanLine.substring(e.getPosition());
+            }
         }
     }
 

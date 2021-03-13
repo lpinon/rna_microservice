@@ -17,12 +17,83 @@ public class ParserServiceTests {
     @Test
     public void whenReceiveAResultString_returnRNAGenes() {
         parserService.parseRNAMultilineString(exampleString);
+        parserService.parseRNAMultilineString(test3String);
+        parserService.parseRNAMultilineString(test2String);
+        parserService.parseRNAMultilineString(test1String);
     }
 
     private static String exampleString = ">NM_0002\n" +
             "augugcgag gacugcuga \n" +
             ">NM_0003 \n" +
             "augugcgaguag";
+
+    private static String test3String = ">NM_001309024 1\n" +
+            "cugacaugagcaaggagaagcagugcaggccggguccccgggugcccaag\n" +
+            "ugcucccgcugccggaaccacggcuugaagaccccgcugaaaggccacaa\n" +
+            "gcgcuucugccgcuggaaagacugccagugcuccaaaugcgagcagaucg\n" +
+            "ugguccgccagagagucauggcggcgcaggucgccgauaggaggcagcag\n" +
+            "gcucaagaggaggagcuugggauuuguaguccagaggccuuguccggccc\n" +
+            "ugaagugguggugaagaaugaagccggagccgacugucucuucuccaugg\n" +
+            "agggacgauccggcacgcuagccaucccccccaaccccaauccucugucu\n" +
+            "gccgcagggagcuacucugcuucaucguccagcccaucggcugcggcccg\n" +
+            "uguuuacggcgaggaagcgucugaccgccugcuggaaaccuccuacuaca\n" +
+            "acuucuaccagccuuccagauauuccuccuauuauggaaaccuguacaac\n" +
+            "uaccagcaguaccagaugccucccuccgacggccaccuguccggccacag\n" +
+            "caugcccucucaguaccgcacgcacuccuucuaccccgggaccaccuacc\n" +
+            "ugccccagggccugggcucgccggggccgccguacuucagccuggaggac\n" +
+            "aaugacgacgcagccgccuccuucuuccccagcagccucaccuccaccca\n" +
+            "ugacuccacccugaccuaccgcuccaucagcucacuagugaacgacggcg\n" +
+            "ucaaggcagaguuugagagcggcggccagccgcccgucuucccggccgac\n" +
+            "uccaugagcagugaaaccaaaugaggagaagcugcgaggcguuggaugga\n" +
+            "ugacgucugcugcagguuucugacuuuggaaccacauuuuaugucuauuu\n" +
+            "uuaguucaaguaaaauucaauccuauuuuggaacaaguagacagaaaauu\n" +
+            "cagacaaaugaaaacuucuuuagaaucaguagauguuggucacaaugauc\n" +
+            "aaaaagcugaauuuaaaacucuuuucuuuauaaacuguuaaaaaacaaag\n" +
+            "uucauuuucuagagaugaaagugaaaaaucaagaauaaaaaaugagaugc\n" +
+            "aaaaaaaaaaaaaaa\n" +
+            ">NM_001309009 2\n" +
+            "cgugugcaggcggaguuaagcgcgcacagaagaaaugcuggggagcgcgg\n" +
+            "gcacaggugugagugagcgcgcagagaccgaccggauucaucagaggcaa\n" +
+            "augaaagaguaauuuaucagacaaagguuuuugugagguuuaucuguuca\n" +
+            "gcucuguauauaaaagguuacagucuagauucuauuaacgucacaguuua\n" +
+            "gggaaugaggauuuuggggguuuugagcgucauuuucuucgguaugaaca\n" +
+            "gcgcaacggcugucacgcauucgcugcgguaccugcacacggcagcuuca\n" +
+            "ggaaucccagcauucccagaguuugugacggugguccugguggacggaca\n" +
+            "gcccuucucuuacuaugacagcagcaucaaaagggagcuucccaggcaga\n" +
+            "ccuggacgguccaaaccgaagacccgaauuucugggagagacgcacuaag\n" +
+            "agcuccauuguugacgaacaagucuucaaaaguaaaguggagaugauuaa\n" +
+            "accaagcuuuaaccagacaggagguguucacauuauucagcugauguacg\n" +
+            "gcugugagugggaugaugagacuggaagcaucaagggcugguggcaguuu\n" +
+            "gguuauaauggagaagaccucauggcuuuggaccugaagacgaacacggg\n" +
+            "gacggcacagacuccagcugccaccuuccauaaacacaaaaaggacaaag\n" +
+            "auaaaggcugggccauacgaaugaacaccuaucugucccagggguguccu\n" +
+            "gaucaucuuaagaaguaugugagcuaugggaagagcacauugcugagaac\n" +
+            "agagacuccaucaguguuucuccuccagaagaauuuccuguccccgguca\n" +
+            "gaugucacgcuacaggcuuuuaccccaacagagcugugauguucuggagg\n" +
+            "aaagauggaaaggagauaaccgaaggaguggagaccggagagauccuccc\n" +
+            "aaacaaugacgggaccuuucagaugagcacugaucugaaacuuuuauuag\n" +
+            "acacaacagaaaagaagagguacgaauguguuuuucagcuuucuggugca\n" +
+            "aaugaaagcaucaucaccaaacuggagcagucaaaaaucaagaccaaugg\n" +
+            "agcaaaccccuaugaagugaccaucuccguuguuauugcagucauuauuu\n" +
+            "uugcugcugucauugcugacuggcucauuguuuauaaaggcagaaaagcu\n" +
+            "gcagaucacuugaacguaaagaagcaaaugcaucuuugagucuggaugca\n" +
+            "aaugaaacucugcacucaguuuucaagugaagucugcacugaaaaggcaa\n" +
+            "cucuaauaauaucauggauaaacuauguguuuauaacaaauuaucugauu\n" +
+            "uaaucugguagaugugucagaaauuuacaauguugcaauuguuugauuuu\n" +
+            "aaagagaaauuuauuugccauuuuucuuuagcacaauaaaugagucucau\n" +
+            "augauuaauuuuuguuuccaaacuggaguuugguguugaauauugucaaa\n" +
+            "ggaaccaaaa\n" +
+            ">NM_001104817 1\n" +
+            "acccaggaaaauguggaaagcaccaugcuugacuuugcuccugcuggugg\n" +
+            "uuuugaugaacaggguggagugcaacgauggccaucccucuuucuacgga\n" +
+            "gugaaacuuuguggaagagaauucauucgagccgucaucuucaccugugg\n" +
+            "aggcucgcgcuggaggagaagugugggagacucagaggagacguuugauc\n" +
+            "cguggaaaacaagucccaucucucagcucaacucggaucaggauccagaa\n" +
+            "aagucccaagcauggaaagaccaaauucuugacguugcuucaguggcugc\n" +
+            "ugguuucagccgcucugcucgcucuccgguuucagaugaaguccuggagg\n" +
+            "cucuucgaaguguggacaggaaaggacgggacguugugcugggacugucc\n" +
+            "aacgccugcugcaaguggggaugcagcaagagugagaucagcucucuaug\n" +
+            "cugaaccugagaac\n";
 
     private static String test2String = ">NM_001170833 1\n" +
             "auggccuuucgcuccagcuugguggaaaaacaagaaacguuuaacuguuu\n" +
