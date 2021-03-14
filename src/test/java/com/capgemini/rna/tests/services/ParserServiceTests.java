@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles(profiles = {"test"})
 @SpringBootTest(classes = MainApplication.class)
 public class ParserServiceTests {
 
@@ -21,6 +20,8 @@ public class ParserServiceTests {
         parserService.parseRNAMultilineString(test2String);
         parserService.parseRNAMultilineString(test1String);
     }
+
+
 
     private static String exampleString = ">NM_0002\n" +
             "augugcgag gacugcuga \n" +
