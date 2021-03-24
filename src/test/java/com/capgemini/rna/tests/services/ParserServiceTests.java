@@ -15,10 +15,10 @@ public class ParserServiceTests {
 
     @Test
     public void whenReceiveAResultString_returnRNAGenes() {
-        parserService.parseRNAMultilineString(exampleString);
-        parserService.parseRNAMultilineString(test3String);
-        parserService.parseRNAMultilineString(test2String);
-        parserService.parseRNAMultilineString(test1String);
+        parserService.parseRNAMultilineString(exampleString, "a");
+        parserService.parseRNAMultilineString(test3String, "a");
+        parserService.parseRNAMultilineString(test2String, "a");
+        parserService.parseRNAMultilineString(test1String, "a");
     }
 
 
