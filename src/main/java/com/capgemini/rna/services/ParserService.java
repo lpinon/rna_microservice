@@ -1,10 +1,14 @@
 package com.capgemini.rna.services;
 
 import com.capgemini.rna.models.Codon;
+import com.capgemini.rna.models.Gen;
 import com.capgemini.rna.models.exceptions.AParserHandledException;
 import com.capgemini.rna.models.exceptions.EmptyGenException;
 import com.capgemini.rna.models.exceptions.InvalidCharacterException;
 import com.capgemini.rna.models.exceptions.UnexpectedEndOfStringException;
+import com.capgemini.rna.models.responses.DecoderExceptionResponse;
+import com.capgemini.rna.models.responses.DecoderResponse;
+import com.capgemini.rna.models.responses.DecoderResultResponse;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +67,7 @@ public class ParserService {
                 this.store.addCodon(codon, id);
                 this.handleGenReady(id);
             } else {
-                log.info("Gen already complete skipping: " + codon.getIdentificator() );
+                log.info("Gen already complete skipping: " + codon.getIdentifier() );
             }
         } else {
             if(this.isCurrentGenReady(id)) {
@@ -114,20 +118,27 @@ public class ParserService {
         return this.stopCodons.contains(codon.getCode());
     }
 
-    public void parseRNAMultilineString(String multilineString, String id) {
+    public DecoderResponse parseRNAMultilineString(String multilineString, String id) {
         String[] lines = multilineString.split("\n");
-        for (String line : lines) {
+        for (var i = 0; i < lines.length; i++) {
             try {
-                this.handleNewRNAString(line, id);
+                this.handleNewRNAString(lines[i], id);
             } catch (AParserHandledException e) {
+                log.severe("Parser exception on line " + i + " for id " + id);
                 log.severe(e.getMessage());
+                e.setLine(i);
                 this.store.saveException(e, id);
             }
         }
-        log.info("Parsed " + this.store.getComputed(id).size() + " gens");
-        log.warning("Thrown " + this.store.getExceptions(id).size() + " exceptions");
+        ArrayList<AParserHandledException> exceptions = this.store.getExceptions(id);
+        ArrayList<Gen> gens = this.store.getComputed(id);
+        log.info("Parsed " + gens.size() + " gens for id " + id);
+        log.warning("Thrown " + exceptions.size() + " exceptions for id " + id);
+        // Generate response obj
+        DecoderResponse response = new DecoderResponse(gens, exceptions);
         // Clean memory
         this.store.initNewExceptionsGroup(id);
         this.store.initNewComputedGroup(id);
+        return response;
     }
 }

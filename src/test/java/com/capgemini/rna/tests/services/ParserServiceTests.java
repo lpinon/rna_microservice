@@ -2,11 +2,13 @@ package com.capgemini.rna.tests.services;
 
 import com.capgemini.rna.app.MainApplication;
 import com.capgemini.rna.services.ParserService;
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+@Log
 @SpringBootTest(classes = MainApplication.class)
 public class ParserServiceTests {
 
@@ -15,10 +17,10 @@ public class ParserServiceTests {
 
     @Test
     public void whenReceiveAResultString_returnRNAGenes() {
-        parserService.parseRNAMultilineString(exampleString, "a");
-        parserService.parseRNAMultilineString(test3String, "a");
-        parserService.parseRNAMultilineString(test2String, "a");
-        parserService.parseRNAMultilineString(test1String, "a");
+        log.info(parserService.parseRNAMultilineString(exampleString, "test").toString());
+        var res = parserService.parseRNAMultilineString(test3String, "test");
+        res = parserService.parseRNAMultilineString(test2String, "test2");
+        res = parserService.parseRNAMultilineString(test1String, "test2");
     }
 
 
