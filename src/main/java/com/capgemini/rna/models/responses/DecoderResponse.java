@@ -2,9 +2,11 @@ package com.capgemini.rna.models.responses;
 
 import com.capgemini.rna.models.Gen;
 import com.capgemini.rna.models.exceptions.AParserHandledException;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
+@Getter
 public class DecoderResponse {
     private final ArrayList<DecoderExceptionResponse> exceptions;
     private final ArrayList<DecoderResultResponse> results;

@@ -26,9 +26,7 @@ public class Gen {
         return this.codons.size() > 1;
     }
 
-    @Override
-    @JsonAlias("id")
-    public String toString() {
+    public String asString() {
         String out = "";
         for(Codon codon: this.codons) {
             out += codon.getIdentifier();

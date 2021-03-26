@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @Scope("singleton")
@@ -19,6 +18,7 @@ public class StoreService {
     private HashMap<String, ArrayList<Gen>> computedGens = new HashMap<>();
     private HashMap<String, Gen> currentGen = new HashMap<>();
     private HashMap<String, ArrayList<AParserHandledException>> exceptions = new HashMap<>();
+    private HashMap<String, String> missingChars = new HashMap<>();
 
     public void addCodon(Codon codon, String id) {
         this.checkCurrentGenExists(id);
@@ -82,5 +82,24 @@ public class StoreService {
     public ArrayList<AParserHandledException> getExceptions(String id) {
         this.checkExceptionGroupExists(id);
         return this.exceptions.get(id);
+    }
+
+    private void checkMissingCharsGroupExists(String id) {
+        if(!this.missingChars.containsKey(id)) {
+            this.cleanMissingChars(id);
+        }
+    }
+
+    public String getMissingChars(String id) {
+        this.checkMissingCharsGroupExists(id);
+        return this.missingChars.get(id);
+    }
+
+    public void cleanMissingChars(String id) {
+        this.missingChars.put(id, "");
+    }
+
+    public void setMissingChars(String substring, String id) {
+         this.missingChars.put(id, substring);
     }
 }

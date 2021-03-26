@@ -6,17 +6,18 @@ import com.capgemini.rna.models.exceptions.AParserHandledException;
 import com.capgemini.rna.models.exceptions.EmptyGenException;
 import com.capgemini.rna.models.exceptions.InvalidCharacterException;
 import com.capgemini.rna.models.exceptions.UnexpectedEndOfStringException;
-import com.capgemini.rna.models.responses.DecoderExceptionResponse;
 import com.capgemini.rna.models.responses.DecoderResponse;
-import com.capgemini.rna.models.responses.DecoderResultResponse;
 import lombok.extern.java.Log;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 @Scope("singleton")
@@ -85,9 +86,9 @@ public class ParserService {
     public void handleNewRNAString(String string, String id) throws AParserHandledException {
         String cleanLine = this.normalize(string);
         if(cleanLine.length() > 0) {
-            if(this.missingChars.length() > 0){
-                cleanLine = this.missingChars + cleanLine;
-                this.missingChars = "";
+            if(this.store.getMissingChars(id).length() > 0){
+                cleanLine = this.store.getMissingChars(id) + cleanLine;
+                this.store.cleanMissingChars(id);
             }
             try {
                 for(var i = 0; i < cleanLine.length(); i += 3) {
@@ -99,7 +100,7 @@ public class ParserService {
                     }
                 }
             } catch (UnexpectedEndOfStringException e) {
-                this.missingChars = cleanLine.substring(e.getPosition());
+                this.store.setMissingChars(cleanLine.substring(e.getPosition()), id);
             }
         }
     }
@@ -132,6 +133,9 @@ public class ParserService {
         }
         ArrayList<AParserHandledException> exceptions = this.store.getExceptions(id);
         ArrayList<Gen> gens = this.store.getComputed(id);
+        if(this.store.getCurrentGen(id).getCodons().size() > 0) {
+            gens.add(this.store.getCurrentGen(id));
+        }
         log.info("Parsed " + gens.size() + " gens for id " + id);
         log.warning("Thrown " + exceptions.size() + " exceptions for id " + id);
         // Generate response obj
