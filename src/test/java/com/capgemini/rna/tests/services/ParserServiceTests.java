@@ -1,12 +1,14 @@
 package com.capgemini.rna.tests.services;
 
 import com.capgemini.rna.app.MainApplication;
+import com.capgemini.rna.models.responses.DecoderResponse;
 import com.capgemini.rna.services.ParserService;
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
+@Log
 @SpringBootTest(classes = MainApplication.class)
 public class ParserServiceTests {
 
@@ -15,12 +17,23 @@ public class ParserServiceTests {
 
     @Test
     public void whenReceiveAResultString_returnRNAGenes() {
-        parserService.parseRNAMultilineString(exampleString);
-        parserService.parseRNAMultilineString(test3String);
-        parserService.parseRNAMultilineString(test2String);
-        parserService.parseRNAMultilineString(test1String);
+        log.info(parserService.parseRNAMultilineString(exampleString, "test").toString());
+        var res = parserService.parseRNAMultilineString(test3String, "test");
+        res = parserService.parseRNAMultilineString(test2String, "test2");
+        res = parserService.parseRNAMultilineString(test1String, "test2");
     }
 
+    @Test
+    public void whenReceiveAResultStringWithInvalidChars_returnErrorInvalidCharacter() {
+        DecoderResponse res = parserService.parseRNAMultilineString(exampleStringWithBadCharacter, "bad_character");
+        assert res.getExceptions().size() == 1;
+        assert res.getExceptions().get(0).getError().equals("Invalid character Y");
+    }
+
+    private static String exampleStringWithBadCharacter = ">NM_0002\n" +
+            "auguygcgag gacugcuga \n" +
+            ">NM_0003 \n" +
+            "augugcgaguag";
 
 
     private static String exampleString = ">NM_0002\n" +

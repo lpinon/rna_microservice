@@ -6,14 +6,16 @@ import com.capgemini.rna.models.exceptions.AParserHandledException;
 import com.capgemini.rna.models.exceptions.EmptyGenException;
 import com.capgemini.rna.models.exceptions.InvalidCharacterException;
 import com.capgemini.rna.models.exceptions.UnexpectedEndOfStringException;
+import com.capgemini.rna.models.responses.DecoderResponse;
 import lombok.extern.java.Log;
+import net.bytebuddy.asm.Advice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -25,8 +27,9 @@ public class ParserService {
     @Value("#{'${codons.stop}'.split(',')}")
     private List<String> stopCodonsProp;
 
-    private ArrayList<Gen> computedGens = new ArrayList<Gen>();
-    private Gen currentGen = new Gen();
+    @Autowired
+    private StoreService store;
+
     private String missingChars = "";
     private HashSet<Integer> stopCodons;
 
@@ -59,52 +62,53 @@ public class ParserService {
         return normalized;
     }
 
-    protected void handleNewCodon(Codon codon) {
+    protected void handleNewCodon(Codon codon, String id) {
         if(this.isEndCodon(codon)){
-            if (!this.isCurrentGenReady()) {
-                this.currentGen.addCodon(codon);
-                this.handleGenReady();
+            if (!this.isCurrentGenReady(id)) {
+                this.store.addCodon(codon, id);
+                this.handleGenReady(id);
             } else {
-                log.info("Gen already complete skipping: " + codon.getIdentificator() );
+                log.info("Gen already complete skipping: " + codon.getIdentifier() );
             }
         } else {
-            if(this.isCurrentGenReady()) {
-                this.currentGen = new Gen();
+            if(this.isCurrentGenReady(id)) {
+                this.store.initNewGen(id);
             }
-            this.currentGen.addCodon(codon);
+            this.store.addCodon(codon, id);
         }
     }
 
-    private void handleGenReady() {
-        this.computedGens.add(this.currentGen);
+    private void handleGenReady(String id) {
+        this.store.saveAsComputed(id);
+        // TODO Send to stream or save to DB
     }
 
-    public void handleNewRNAString(String string) throws AParserHandledException {
+    public void handleNewRNAString(String string, String id) throws AParserHandledException {
         String cleanLine = this.normalize(string);
         if(cleanLine.length() > 0) {
-            if(this.missingChars.length() > 0){
-                cleanLine = this.missingChars + cleanLine;
-                this.missingChars = "";
+            if(this.store.getMissingChars(id).length() > 0){
+                cleanLine = this.store.getMissingChars(id) + cleanLine;
+                this.store.cleanMissingChars(id);
             }
             try {
                 for(var i = 0; i < cleanLine.length(); i += 3) {
                     try {
                         Codon codon = new Codon(cleanLine.charAt(i), cleanLine.charAt(i + 1), cleanLine.charAt(i + 2));
-                        this.handleNewCodon(codon);
+                        this.handleNewCodon(codon, id);
                     } catch (IndexOutOfBoundsException ex) {
                         throw new UnexpectedEndOfStringException(i);
                     }
                 }
             } catch (UnexpectedEndOfStringException e) {
-                this.missingChars = cleanLine.substring(e.getPosition());
+                this.store.setMissingChars(cleanLine.substring(e.getPosition()), id);
             }
         }
     }
 
-    public boolean isCurrentGenReady() {
+    public boolean isCurrentGenReady(String id) {
         boolean isReady;
         try {
-            isReady = this.isEndCodon(this.currentGen.getLastCodon());
+            isReady = this.isEndCodon(this.store.getCurrentGen(id).getLastCodon());
         } catch (EmptyGenException e) {
             isReady = false;
         }
@@ -115,18 +119,30 @@ public class ParserService {
         return this.stopCodons.contains(codon.getCode());
     }
 
-    public void parseRNAMultilineString(String multilineString) {
-        this.computedGens = new ArrayList<>();
-        ArrayList<AParserHandledException> exceptions = new ArrayList<>();
+    public DecoderResponse parseRNAMultilineString(String multilineString, String id) {
         String[] lines = multilineString.split("\n");
-        for (String line : lines) {
+        for (var i = 0; i < lines.length; i++) {
             try {
-                this.handleNewRNAString(line);
+                this.handleNewRNAString(lines[i], id);
             } catch (AParserHandledException e) {
+                log.severe("Parser exception on line " + i + " for id " + id);
                 log.severe(e.getMessage());
-                exceptions.add(e);
+                e.setLine(i);
+                this.store.saveException(e, id);
             }
         }
-        log.info("Parsed " + this.computedGens.size() + " gens");
+        ArrayList<AParserHandledException> exceptions = this.store.getExceptions(id);
+        ArrayList<Gen> gens = this.store.getComputed(id);
+        if(this.store.getCurrentGen(id).getCodons().size() > 0 && !this.store.getCurrentGen(id).isGenValid()) {
+            gens.add(this.store.getCurrentGen(id));
+        }
+        log.info("Parsed " + gens.size() + " gens for id " + id);
+        log.warning("Thrown " + exceptions.size() + " exceptions for id " + id);
+        // Generate response obj
+        DecoderResponse response = new DecoderResponse(gens, exceptions);
+        // Clean memory
+        this.store.initNewExceptionsGroup(id);
+        this.store.initNewComputedGroup(id);
+        return response;
     }
 }

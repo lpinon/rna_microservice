@@ -6,11 +6,17 @@ import lombok.Getter;
 public class Codon {
 
     @Getter private final int code;
-    @Getter private final String identificator;
+    @Getter private final String identifier;
+    @Getter private final char nucleotide1;
+    @Getter private final char nucleotide2;
+    @Getter private final char nucleotide3;
 
     public Codon(Character nucleotide1, Character nucleotide2, Character nucleotide3) throws InvalidCharacterException {
-        this.identificator = new StringBuilder().append(nucleotide1).append(nucleotide2).append(nucleotide3).toString();
+        this.identifier = new StringBuilder().append(nucleotide1).append(nucleotide2).append(nucleotide3).toString();
         this.code = this.parseNucleotides(nucleotide1, nucleotide2, nucleotide3);
+        this.nucleotide1 = nucleotide1;
+        this.nucleotide2 = nucleotide2;
+        this.nucleotide3 = nucleotide3;
     }
 
     private int parseNucleotides(Character nucleotide1, Character nucleotide2, Character nucleotide3) throws InvalidCharacterException {
