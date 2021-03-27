@@ -87,11 +87,17 @@ If you send a POST request to the endpoint with an input string to decode:
 
 ### Parallel Scalable Multi-threading solution
 
-Do to the nature of the Spring framework, each Request will be handled by a different Thread.
+Due to the nature of the Spring framework, each Request will be handled by a different Thread.
 
-Event streams are handled in a similar way. Each message is handled by a thread in a way that events from different clients can be processed on a same topic.
+Event streams are handled in a similar way. Each message is handled by a thread in a way that events from different clients can be processed on a same single topic.
 
-Threads with chunks of data from a **Gen that is already being processed** by another thread will **wait for the first one to finish**. 
+Due to the sequential processing nature of the Codons to Gens (an ordered sequence), threads with chunks of data from a **Gen that is already being processed** by another thread will **wait for the first one to finish**. 
+
+Parallelism is achieved using different threads for handling each of the clients requests. If the machine threading (or memory) capacity is exceeded a shared persistence layer should be used in order to maintain order.
+
+An extra parameter `id` is used to identify and group subsequent input strings into the corresponding Gen and check for pending nucleotides from the last execution. 
+
+*WARNING: Change the id only when you have finished sending a full Gen or sending a different sample.* 
 
 **Body**:
 
