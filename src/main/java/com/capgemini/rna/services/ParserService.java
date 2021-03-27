@@ -30,6 +30,9 @@ public class ParserService {
     @Autowired
     private StoreService store;
 
+    @Autowired
+    private SynchroService synchro;
+
     private String missingChars = "";
     private HashSet<Integer> stopCodons;
 
@@ -119,7 +122,8 @@ public class ParserService {
         return this.stopCodons.contains(codon.getCode());
     }
 
-    public DecoderResponse parseRNAMultilineString(String multilineString, String id) {
+    public DecoderResponse parseRNAMultilineString(String multilineString, String id) throws InterruptedException {
+        this.synchro.acquireExecutionPermission(id);
         String[] lines = multilineString.split("\n");
         for (var i = 0; i < lines.length; i++) {
             try {
@@ -143,6 +147,7 @@ public class ParserService {
         // Clean memory
         this.store.initNewExceptionsGroup(id);
         this.store.initNewComputedGroup(id);
+        this.synchro.release(id);
         return response;
     }
 }
