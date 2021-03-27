@@ -20,12 +20,12 @@ public class Gen {
     }
 
     @JsonProperty
-    public long getCode() {
+    public String getCode() {
         StringBuilder out = new StringBuilder();
         for(Codon codon: this.codons) {
             out.append(codon.getCode());
         }
-        return Long.valueOf(out.toString());
+        return out.toString();
     }
 
     @Getter
