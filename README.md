@@ -12,8 +12,8 @@ Genes are defined by a sequence of what could be many hundreds of codons. Each g
 Given a single or multiline string of codons that can contain:
 * Any of the possible nucleotide representation (A / U / G / C) or any other characters
 * White spaces
-* Comments - prefixed with *>*
-* Line breaks - *\n*
+* Comments - prefixed with `>`
+* Line breaks - `\n`
 
 It is cleansed (Remove Comments to the end of the line, Line Breaks, White spaces and extra noise Stop Codons)
 
@@ -117,7 +117,7 @@ Or with (once you have compiled and installed deps):
 mvn exec:java
 ```
 
-### Running on Docker - 👀 Fast onboarding 🎉
+### Running on Docker - 👀 Quick OnBoarding 🤖
 
 ```shell script
 mvn spring-boot:build-image
