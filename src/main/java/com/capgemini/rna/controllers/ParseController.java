@@ -19,7 +19,7 @@ public class ParseController {
     ParserService parser;
 
     @RequestMapping( value="/decode", method = RequestMethod.POST)
-    public DecoderResponse decode(@NotNull @Valid @RequestBody DecoderRequest request){
+    public DecoderResponse decode(@NotNull @Valid @RequestBody DecoderRequest request) throws InterruptedException {
         return parser.parseRNAMultilineString(request.getData(), request.getId());
     }
 

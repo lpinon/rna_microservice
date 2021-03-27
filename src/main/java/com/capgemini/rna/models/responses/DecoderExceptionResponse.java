@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-@Setter
 public class DecoderExceptionResponse {
 
     @NotNull

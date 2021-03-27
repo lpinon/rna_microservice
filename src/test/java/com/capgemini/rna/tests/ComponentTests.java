@@ -32,7 +32,7 @@ public class ComponentTests {
     }
 
     @Test
-    public void whenReceiveInputInChunks_returnExpectedGens() {
+    public void whenReceiveInputInChunks_returnExpectedGens() throws InterruptedException {
         int numGensTotal = parserService.parseRNAMultilineString(exampleString, "test-total").getResults().size();
         int countedGens = 0;
         int countedExceptions = 0;
@@ -50,7 +50,7 @@ public class ComponentTests {
     }
 
     @Test
-    public void whenReceiveInputInChunksInParallel_returnExpectedGens() {
+    public void whenReceiveInputInChunksInParallel_returnExpectedGens() throws InterruptedException {
         int numGensTotal = parserService.parseRNAMultilineString(exampleString, "test-parallel-total").getResults().size();
         int countedGens1 = 0;
         int countedExceptions1 = 0;

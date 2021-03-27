@@ -38,7 +38,18 @@ If you send a POST request to the endpoint with an input string to decode:
 * Your remaining codons will be stored until you send an end Codon
 * You will receive the full Gen on the last response (the one containing the END Codon)
 
-**Response body**:
+**Example request**:
+
+```shell script
+curl --location --request POST 'localhost:8080/decode' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id": "testId",
+    "data": ">NM_0002\naugugcgag gacugcuga >NM_0003 \naugugcgaguag"
+}'
+```
+
+**Example Response body**:
 ```json
 {
     "results": [
