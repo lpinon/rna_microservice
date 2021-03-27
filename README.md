@@ -143,8 +143,8 @@ mvn test
     * `models.requests`: Request types.
     * `models.responses`: Response types.
 - `service`: Implementation of the main functionalities on the Service layer.
-    * `service.ParserService`: Client for connecting to Cerberus.
-    * `service.StoreService`: Logic for monitoring executions of pipelines.
+    * `service.ParserService`: Main parsing logic.
+    * `service.StoreService`: Handles gen and codons storage.
 - `resources/application.properties`: properties used by the System.
 
 # Simulator
