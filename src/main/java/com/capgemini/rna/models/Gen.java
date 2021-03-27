@@ -19,15 +19,6 @@ public class Gen {
         return out.toString();
     }
 
-    @JsonProperty
-    public String getCode() {
-        StringBuilder out = new StringBuilder();
-        for(Codon codon: this.codons) {
-            out.append(codon.getCode());
-        }
-        return out.toString();
-    }
-
     @Getter
     private ArrayList<Codon> codons = new ArrayList<>();
 

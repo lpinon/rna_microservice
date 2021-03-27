@@ -28,6 +28,7 @@ public class ParserServiceTests {
         DecoderResponse res = parserService.parseRNAMultilineString(exampleStringWithBadCharacter, "bad_character");
         assert res.getExceptions().size() == 1;
         assert res.getExceptions().get(0).getError().equals("Invalid character Y");
+        assert res.getExceptions().get(0).getLine() == 1;
     }
 
     private static String exampleStringWithBadCharacter = ">NM_0002\n" +
