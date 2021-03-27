@@ -137,9 +137,6 @@ public class ParserService {
         }
         ArrayList<AParserHandledException> exceptions = this.store.getExceptions(id);
         ArrayList<Gen> gens = this.store.getComputed(id);
-        if(this.store.getCurrentGen(id).getCodons().size() > 0 && !this.store.getCurrentGen(id).isGenValid()) {
-            gens.add(this.store.getCurrentGen(id));
-        }
         log.info("Parsed " + gens.size() + " gens for id " + id);
         log.warning("Thrown " + exceptions.size() + " exceptions for id " + id);
         // Generate response obj
