@@ -91,7 +91,7 @@ Do to the nature of the Spring framework, each Request will be handled by a diff
 
 Event streams are handled in a similar way. Each message is handled by a thread in a way that events from different clients can be processed on a same topic.
 
-Threads with chunks of data from a Gen that is already being processed by another thread will wait for the first one to finish. 
+Threads with chunks of data from a **Gen that is already being processed** by another thread will **wait for the first one to finish**. 
 
 **Body**:
 
