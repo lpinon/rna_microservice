@@ -111,7 +111,7 @@ An extra parameter `id` is used to identify and group subsequent input strings i
 ## Running the application
 
 ### Dependencies
-Dependecies are automatically managed by **Maven** and **Spring**.
+Dependecies are automatically managed by **Maven** and injected using **Spring @Autowired** .
 
 ### Running on local
 Start the process with the command:
