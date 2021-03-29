@@ -18,6 +18,7 @@ class MultiChunkKafkaFileSender:
                 lines_to_send = ""
         if len(lines_to_send) > 0:
             KafkaClient.send_str_to_decoder(lines_to_send, ses_id)
+        KafkaClient.send_end_of_stream(ses_id)
 
 
 if __name__ == '__main__':

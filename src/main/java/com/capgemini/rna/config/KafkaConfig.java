@@ -2,12 +2,12 @@ package com.capgemini.rna.config;
 
 import com.capgemini.rna.models.requests.DecoderRequest;
 import com.capgemini.rna.models.responses.DecoderSimpleResultResponse;
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,8 +54,10 @@ public class KafkaConfig {
                 StringSerializer.class);
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                JsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
+                StringSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps,
+                new StringSerializer(),
+                new JsonSerializer<DecoderSimpleResultResponse>());
     }
 
     @Bean

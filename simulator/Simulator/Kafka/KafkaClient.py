@@ -29,3 +29,9 @@ class KafkaClient:
         data_to_send = json.dumps({"data": input_string, "id": session_id}).encode('utf-8')
         kafka_producer.send(KAFKA_TOPIC, value=data_to_send)
         print(data_to_send)
+
+    @staticmethod
+    def send_end_of_stream(session_id):
+        data_to_send = json.dumps({"data": "END_OF_STREAM", "id": session_id}).encode('utf-8')
+        kafka_producer.send(KAFKA_TOPIC, value=data_to_send)
+        print(data_to_send)

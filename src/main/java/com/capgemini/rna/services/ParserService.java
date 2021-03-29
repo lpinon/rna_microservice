@@ -7,6 +7,7 @@ import com.capgemini.rna.models.exceptions.EmptyGenException;
 import com.capgemini.rna.models.exceptions.InvalidCharacterException;
 import com.capgemini.rna.models.exceptions.UnexpectedEndOfStringException;
 import com.capgemini.rna.models.responses.DecoderResponse;
+import com.capgemini.rna.models.responses.DecoderSimpleResultResponse;
 import lombok.extern.java.Log;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class ParserService {
 
     @Autowired
     private StoreService store;
+
+    @Autowired
+    private KafkaService kafka;
 
     @Autowired
     private SynchroService synchro;
@@ -83,7 +87,7 @@ public class ParserService {
 
     private void handleGenReady(String id) {
         this.store.saveAsComputed(id);
-        // TODO Send to stream or save to DB
+        this.kafka.sendResult(new DecoderSimpleResultResponse(this.store.getCurrentGen(id).getIdentifier(), id, null));
     }
 
     public void handleNewRNAString(String string, String id) throws AParserHandledException {
@@ -146,5 +150,31 @@ public class ParserService {
         this.store.initNewComputedGroup(id);
         this.synchro.release(id);
         return response;
+    }
+
+    public void handleNewRNAStream(String data, String id) throws InterruptedException {
+        this.synchro.acquireExecutionPermission(id);
+        String[] lines = data.split("\n");
+        for (var i = 0; i < lines.length; i++) {
+            if(lines[i].equals("END_OF_STREAM")) {
+                if(this.store.getMissingChars(id).length() > 0 || this.store.getCurrentGen(id).getCodons().size() > 0) {
+                    Exception ex = new UnexpectedEndOfStringException(i);
+                    this.kafka.sendResult(new DecoderSimpleResultResponse(null, id, ex.getMessage()));
+                }
+            }
+            try {
+                this.handleNewRNAString(lines[i], id);
+            } catch (AParserHandledException e) {
+                log.severe("Parser exception on line " + i + " for id " + id);
+                log.severe(e.getMessage());
+                e.setLine(i);
+                this.kafka.sendResult(new DecoderSimpleResultResponse(null, id, e.getMessage()));
+            }
+            if(this.store.getComputed(id).size() > 0) {
+                // Clean memory always
+                this.store.initNewComputedGroup(id);
+            }
+        }
+        this.synchro.release(id);
     }
 }

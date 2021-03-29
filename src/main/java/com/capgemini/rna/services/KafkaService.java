@@ -22,27 +22,32 @@ public class KafkaService {
     @Value(value = "${kafka.clean.topic}")
     private String cleanTopic;
 
+    @Autowired
+    private ParserService parser;
+
     @KafkaListener(
             topics = "rawsamples",
             containerFactory = "requestsListenerContainerFactory")
-    public void requestsListener(DecoderRequest request) {
-        log.info(request.getData());
+    public void requestsListener(DecoderRequest request) throws InterruptedException {
+        this.parser.handleNewRNAStream(request.getData(), request.getId());
     }
 
     public void sendResult(DecoderSimpleResultResponse result) {
         ListenableFuture<SendResult<String, DecoderSimpleResultResponse>> future = kafkaTemplate.send(cleanTopic, result);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, DecoderSimpleResultResponse>>() {
+        if(future != null) {
+            future.addCallback(new ListenableFutureCallback<SendResult<String, DecoderSimpleResultResponse>>() {
 
-            @Override
-            public void onSuccess(SendResult<String, DecoderSimpleResultResponse> msg) {
-                log.info("Sent message with offset=[" + msg.getRecordMetadata().offset() + "]");
-            }
+                @Override
+                public void onSuccess(SendResult<String, DecoderSimpleResultResponse> msg) {
+                    log.info("Sent message with offset=[" + msg.getRecordMetadata().offset() + "]");
+                }
 
-            @Override
-            public void onFailure(Throwable ex) {
-                log.severe("Unable to send message on due to : " + ex.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Throwable ex) {
+                    log.severe("Unable to send message on due to : " + ex.getMessage());
+                }
+            });
+        }
     }
 
 }
