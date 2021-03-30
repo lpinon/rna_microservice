@@ -7,9 +7,11 @@ import lombok.extern.java.Log;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @Log
 @SpringBootTest(classes = MainApplication.class)
+@ActiveProfiles("kafka-test")
 public class ParserServiceTests {
 
     @Autowired
