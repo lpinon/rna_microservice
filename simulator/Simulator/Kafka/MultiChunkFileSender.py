@@ -28,6 +28,6 @@ if __name__ == '__main__':
     parser.add_argument("--lines-per-chunk", help="number of lines per chunk", required=False, default=10)
     args = parser.parse_args()
     file = args.file
-    session_id = args.id if args.id else file + "_" + str(time.time())
     lines_per_chunk = args.lines_per_chunk
+    session_id = args.id if args.id else file + "_" + str(time.time())
     MultiChunkKafkaFileSender.send_file(file, session_id, lines_per_chunk)

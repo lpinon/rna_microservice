@@ -141,6 +141,17 @@ public class ParserService {
         }
         ArrayList<AParserHandledException> exceptions = this.store.getExceptions(id);
         ArrayList<Gen> gens = this.store.getComputed(id);
+        try {
+            if (this.store.getMissingChars(id).length() > 0 ||
+                    (this.store.getCurrentGen(id).getCodons().size() > 0 &&
+                            !this.isEndCodon(this.store.getCurrentGen(id).getLastCodon())))
+            {
+                AParserHandledException ex = new UnexpectedEndOfStringException(lines.length - 1);
+                exceptions.add(ex);
+            }
+        } catch (EmptyGenException e) {
+          log.info(e.getMessage());
+        }
         log.info("Parsed " + gens.size() + " gens for id " + id);
         log.warning("Thrown " + exceptions.size() + " exceptions for id " + id);
         // Generate response obj
@@ -160,6 +171,7 @@ public class ParserService {
                 if(this.store.getMissingChars(id).length() > 0 || this.store.getCurrentGen(id).getCodons().size() > 0) {
                     Exception ex = new UnexpectedEndOfStringException(i);
                     this.kafka.sendResult(new DecoderSimpleResultResponse(null, id, ex.getMessage()));
+                    return;
                 }
             }
             try {
