@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 @Getter
 public class DecoderResponse {
-    private final ArrayList<DecoderExceptionResponse> exceptions;
     private final ArrayList<DecoderResultResponse> results;
+    private final ArrayList<DecoderExceptionResponse> exceptions;
 
     public DecoderResponse(ArrayList<Gen> gens, ArrayList<AParserHandledException> exceptions) {
         this.exceptions = new ArrayList<>();

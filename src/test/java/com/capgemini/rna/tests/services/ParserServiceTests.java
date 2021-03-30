@@ -7,16 +7,18 @@ import lombok.extern.java.Log;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @Log
 @SpringBootTest(classes = MainApplication.class)
+@ActiveProfiles("kafka-test")
 public class ParserServiceTests {
 
     @Autowired
     ParserService parserService;
 
     @Test
-    public void whenReceiveAResultString_returnRNAGenes() {
+    public void whenReceiveAResultString_returnRNAGenes() throws InterruptedException {
         log.info(parserService.parseRNAMultilineString(exampleString, "test").toString());
         var res = parserService.parseRNAMultilineString(test3String, "test");
         res = parserService.parseRNAMultilineString(test2String, "test2");
@@ -24,10 +26,11 @@ public class ParserServiceTests {
     }
 
     @Test
-    public void whenReceiveAResultStringWithInvalidChars_returnErrorInvalidCharacter() {
+    public void whenReceiveAResultStringWithInvalidChars_returnErrorInvalidCharacter() throws InterruptedException {
         DecoderResponse res = parserService.parseRNAMultilineString(exampleStringWithBadCharacter, "bad_character");
         assert res.getExceptions().size() == 1;
         assert res.getExceptions().get(0).getError().equals("Invalid character Y");
+        assert res.getExceptions().get(0).getLine() == 1;
     }
 
     private static String exampleStringWithBadCharacter = ">NM_0002\n" +
