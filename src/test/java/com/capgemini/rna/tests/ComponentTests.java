@@ -7,6 +7,7 @@ import com.capgemini.rna.models.responses.DecoderSimpleResultResponse;
 import com.capgemini.rna.services.KafkaService;
 import com.capgemini.rna.services.ParserService;
 import lombok.extern.java.Log;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.verify;
 @Log
 @SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("kafka-test")
+@Disabled
 public class ComponentTests {
 
     @Autowired

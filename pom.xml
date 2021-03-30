@@ -15,6 +15,7 @@
     </parent>
     <properties>
         <java.version>11</java.version>
+        <exec.mainClass>com.capgemini.rna.app.MainApplication</exec.mainClass>
     </properties>
     <dependencies>
         <dependency>

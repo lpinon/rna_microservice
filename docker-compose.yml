@@ -32,15 +32,6 @@ services:
       KAFKA_LOG_SEGMENT_DELETE_DELAY_MS: 60000
     networks:
       - mRNA
-
-  mrna-service:
-    container_name: mrna-service
-    image: rna_microservice_mrna-service:latest
-    ports:
-      - 8080:8080
-    networks:
-      - mRNA
-
 networks:
   mRNA:
     driver: bridge

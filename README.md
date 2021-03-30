@@ -142,6 +142,14 @@ An extra parameter `id` is used to identify and group subsequent input strings i
 ### Dependencies
 Dependecies are automatically managed by **Maven** and injected using **Spring @Autowired** .
 
+### Running Kafka on Docker - 👀 Quick OnBoarding 🤖
+
+Docker image deploys Kafka + Zookeeper (preconfigured) running on port `:9092` [Kafka] and `:2181` [Zookeeper]
+
+```shell script
+docker-compose up --build 
+```
+
 ### Running on local
 Start the process with the command:
 ```shell script
@@ -150,17 +158,6 @@ mvn clean compile exec:java
 Or with (once you have compiled and installed deps):
 ```shell script
 mvn exec:java
-```
-
-### Running on Docker - 👀 Quick OnBoarding 🤖
-
-```shell script
-mvn spring-boot:build-image
-```
-Docker image deploys mRNA microservice running on `:8080/decode` & Kafka + Zookeeper (preconfigured) running on port `:9092` [Kafka] and `:2181` [Zookeeper]
-
-```shell script
-docker-compose up --build 
 ```
 
 ### Run Tests
@@ -183,6 +180,25 @@ mvn test
 - `resources/application.properties`: properties used by the System.
 
 # Simulator
+
+Simulators accept different arguments:
+```shell script
+python script.py file [--id ID] [--lines-per-chunk LINES_PER_CHUNK]
+```
+* file (mandatory): relative route to the file that you want to process
+* id (optional): identifier for the session
+* lines-per-chunk (optional - default 10): number of lines to send per chunk
+
+## API Simulator 
+
+* MultiChunkAPIFileSender
+
+## Kafka Simulator
+
+The Kafka simulator module includes a Kafka client able to Listen and Send messages to a specific topic.
+
+* KafkaClient
+* MultiChunkKafkaFileSender
 
 # Working with files
 
