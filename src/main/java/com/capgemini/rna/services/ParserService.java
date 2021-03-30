@@ -13,7 +13,9 @@ import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -163,6 +165,8 @@ public class ParserService {
         return response;
     }
 
+    @Async
+    @Transactional
     public void handleNewRNAStream(String data, String id) throws InterruptedException {
         this.synchro.acquireExecutionPermission(id);
         String[] lines = data.split("\n");
