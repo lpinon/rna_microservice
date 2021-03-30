@@ -38,6 +38,8 @@ If you send a POST request to the endpoint with an input string to decode:
 * Your remaining codons will be stored until you send an end Codon
 * You will receive the full Gen on the last response (the one containing the END Codon)
 
+If you send an incomplete Gen in one message (only a few lines but not the full one) you will receive an **UnexpectedEndOfStream** error indicating that there is more data pending to be sent in order to complete the current Gen.
+
 **Example request**:
 
 ```shell script
@@ -95,6 +97,22 @@ curl --location --request POST 'localhost:8080/decode' \
 ```
 
 #### Kafka Streams
+
+There are 2 topics available for Production / Consumption of messages:
+
+* Raw input strings (***rawsamples***)
+* Clean Gens (***cleangens***)
+
+Kafka implementation provides a double queue system for putting input strings on one topic (*rawsamples*) and consuming clean gens from another (*cleangens*).
+
+Use the same request body as the API for sending messages to Kafka.
+
+When sending data is finished, send a `END_OF_STREAM` in a new line as part of the input string. You will get an **UnexpectedEndOfStream** error if still incomplete Gens in memory. 
+ 
+**Example response message - Clean Gen**: 
+```json
+{"id": "refMrna.fa.corrected.txt_1617093612.790452", "gen": "CCAUGA", "error": null}
+```
 
 ### Parallel Scalable Multi-threading solution
 
